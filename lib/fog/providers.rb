@@ -31,3 +31,5 @@ require 'fog/vsphere'
 require 'fog/voxel'
 require 'fog/xenserver'
 require 'fog/zerigo'
+require 'fog/cloudsigma'
+

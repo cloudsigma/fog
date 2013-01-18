@@ -100,6 +100,9 @@ module Fog
       when :xenserver
         require 'fog/xenserver/compute'
         Fog::Compute::XenServer.new(attributes)
+      when :cloudsigma
+        require 'fog/cloudsigma/compute'
+        Fog::Compute::CloudSigma.new(attributes)
       else
         raise ArgumentError.new("#{provider} is not a recognized compute provider")
       end
