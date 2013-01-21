@@ -8,7 +8,14 @@ module Fog
       end
 
       class Mock
+        def delete_volume(vol_id)
+          self.data[:volumes].delete(vol_id)
 
+          response = Excon::Response.new
+          response.status = 204
+
+          response
+        end
       end
 
     end

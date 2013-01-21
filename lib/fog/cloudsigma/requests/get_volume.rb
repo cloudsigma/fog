@@ -8,7 +8,16 @@ module Fog
       end
 
       class Mock
+        def get_volume(vol_id)
+          data = self.data[:volumes][vol_id]
 
+          response = Excon::Response.new
+          response.status = 200
+          response.body = data
+
+          response
+
+        end
       end
 
     end

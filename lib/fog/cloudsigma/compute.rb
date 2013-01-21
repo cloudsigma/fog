@@ -26,6 +26,29 @@ module Fog
       class Mock
         include Collections
 
+        def self.data
+          @data ||= Hash.new do |hash, key|
+            hash[key] = {:volumes => {}}
+          end
+        end
+
+        def self.random_uuid
+          # Insert '4' at 13th position and 'a' at 17th as per uuid4 spec
+          hex = Fog::Mock.random_hex(30).insert(12,'4').insert(16, 'a')
+          # Add dashes
+          "#{hex[0...8]}-#{hex[8...12]}-#{hex[12...16]}-#{hex[16...20]}-#{hex[20..32]}"
+        end
+
+        def data
+          self.class.data[:test]
+        end
+
+        def initialize(options={})
+          @init_options = options
+
+          #setup_connection(options)
+        end
+
       end
 
       class Real
