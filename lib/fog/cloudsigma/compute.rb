@@ -14,21 +14,31 @@ module Fog
       model :volume
       collection :volumes
 
-      request :list_volumes
-      request :get_volume
       request :create_volume
+      request :get_volume
+      request :list_volumes
       request :update_volume
       request :delete_volume
 
-      #model :server
-      #collection :servers
+
+      model :server
+      collection :servers
+
+      request :create_server
+      request :get_server
+      request :list_servers
+      request :update_server
+      request :delete_server
 
       class Mock
         include Collections
 
         def self.data
           @data ||= Hash.new do |hash, key|
-            hash[key] = {:volumes => {}}
+            hash[key] = {
+                :volumes => {},
+                :servers => {},
+            }
           end
         end
 
