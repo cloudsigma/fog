@@ -99,6 +99,24 @@ module Fog
           requires :identity
           collection.get(identity)
         end
+
+        def start(start_params={})
+          requires :identity
+          service.start_server(identity, start_params)
+        end
+
+        def stop
+          requires :identity
+          service.stop_server(identity)
+        end
+
+        def clone(clone_params={})
+          requires :identity
+          response = service.clone_server(identity, clone_params)
+
+          self.class.new(response.body)
+        end
+
       end
     end
   end

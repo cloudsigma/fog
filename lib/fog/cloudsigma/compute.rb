@@ -19,6 +19,7 @@ module Fog
       request :list_volumes
       request :update_volume
       request :delete_volume
+      request :clone_volume
 
 
       model :server
@@ -29,6 +30,9 @@ module Fog
       request :list_servers
       request :update_server
       request :delete_server
+      request :start_server
+      request :stop_server
+      request :clone_server
 
       class Mock
         include Collections

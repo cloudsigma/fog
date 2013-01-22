@@ -79,6 +79,13 @@ module Fog
           requires :identity
           collection.get(identity)
         end
+
+        def clone(clone_params={})
+          requires :identity
+          response = service.clone_volume(identity, clone_params)
+
+          self.class.new(response.body)
+        end
       end
     end
   end
