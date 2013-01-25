@@ -36,6 +36,19 @@ module Fog
       request :stop_server
       request :clone_server
 
+      model :ip
+      collection :ips
+
+      request :list_ips
+      request :get_ip
+
+      model :vlan
+      collection :vlans
+
+      request :list_vlans
+      request :get_vlan
+
+
       class Mock
         include Collections
 

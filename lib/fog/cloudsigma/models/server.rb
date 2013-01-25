@@ -211,7 +211,7 @@ module Fog
           self.volumes = []
         end
 
-        def add_nic(model='virtio', boot_order=nil, vlan=nil, ip_v4_conf=nil, ip_v6_conf=nil)
+        def add_nic(vlan=nil, ip_v4_conf=nil, ip_v6_conf=nil, model='virtio', boot_order=nil)
           nic_data = {
               'model' => model,
               'vlan' => vlan,
@@ -223,6 +223,23 @@ module Fog
           end
 
           self.nics = self.nics << Nic.new(nic_data)
+        end
+
+        def add_public_nic(ip_or_conf=:dhcp, model='virtio', boot_order=nil)
+          case ip_or_conf
+            when :dhcp
+              add_nic(nil, {:conf => :dhcp}, model, boot_order)
+            when :manual
+              add_nic(nil, {:conf => :manual}, model, boot_order)
+            else
+              ip = ip_or_conf.kind_of?(String) ? ip_or_conf : ip_or_conf.ip
+              add_nic(nil, {:conf => :static, :ip => ip}, nil, model, boot_order)
+          end
+        end
+
+        def add_private_nic(vlan, model='virtio', boot_order=nil)
+          vlan = vlan.kind_of?(String) ? vlan : vlan.id
+          add_nic(vlan, nil, nil, model, boot_order)
         end
 
         def remove_nic(mac_or_position)
