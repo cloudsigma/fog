@@ -34,6 +34,8 @@ module Fog
       request :delete_server
       request :start_server
       request :stop_server
+      request :open_vnc
+      request :close_vnc
       request :clone_server
 
       model :ip

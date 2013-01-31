@@ -139,6 +139,16 @@ module Fog
           service.stop_server(identity)
         end
 
+        def open_vnc
+          requires :identity
+          service.open_vnc(identity)
+        end
+
+        def close_vnc
+          requires :identity
+          service.close_vnc(identity)
+        end
+
         def clone(clone_params={})
           requires :identity
           response = service.clone_server(identity, clone_params)
