@@ -56,6 +56,12 @@ module Fog
       request :list_vlans
       request :get_vlan
 
+      model :subscription
+      collection :subscriptions
+
+      request :list_subscriptions
+      request :get_subscription
+
 
       class Mock
         include Collections
