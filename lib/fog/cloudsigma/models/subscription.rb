@@ -1,9 +1,9 @@
-require 'fog/core/model'
+require 'fog/cloudsigma/nested_model'
 
 module Fog
   module Compute
     class CloudSigma
-      class Subscription < Fog::Model
+      class Subscription < Fog::CloudSigma::CloudsigmaModel
         identity :id
 
         attribute :status, :type => :string

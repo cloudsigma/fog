@@ -21,11 +21,11 @@ module Fog
       request :delete_volume
       request :clone_volume
 
-      model :libvolume
-      collection :libvolumes
+      model :lib_volume
+      collection :lib_volumes
 
-      request :get_libvolume
-      request :list_libvolumes
+      request :get_lib_volume
+      request :list_lib_volumes
 
       model :ipconf
       model :nic

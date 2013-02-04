@@ -1,9 +1,9 @@
-require 'fog/core/model'
+require 'fog/cloudsigma/nested_model'
 
 module Fog
   module Compute
     class CloudSigma
-      class IP < Fog::Model
+      class IP < Fog::CloudSigma::CloudsigmaModel
         identity :ip, :aliases => 'uuid'
         attribute :tags, :type => :array
         attribute :nameservers, :type => :array

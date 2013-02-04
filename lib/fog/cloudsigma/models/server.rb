@@ -1,9 +1,13 @@
-require 'fog/core/model'
+require 'fog/cloudsigma/nested_model'
+require 'fog/cloudsigma/models/mountpoint'
+require 'fog/cloudsigma/models/nic'
 
 module Fog
   module Compute
     class CloudSigma
-      class Server < Fog::Model
+      class Server < Fog::CloudSigma::CloudsigmaModel
+
+
         identity :id, :aliases => 'uuid'
 
         attribute :status, :type => :string
@@ -12,9 +16,7 @@ module Fog
         attribute :cpus_instead_of_cores, :type => :boolean
         attribute :tags
         attribute :mem, :type => :integer
-        attribute :nics
         attribute :enable_numa, :type => :boolean
-        attribute :volumes, :type => :array, :aliases => 'drives'
         attribute :smp
         attribute :hv_relaxed, :type => :boolean
         attribute :hv_tsc, :type => :boolean
@@ -23,37 +25,9 @@ module Fog
         attribute :runtime
         attribute :cpu, :type => :integer
         attribute :resource_uri, :type => :string
+        model_attribute_array :volumes, MountPoint, :aliases => 'drives'
+        model_attribute_array :nics, Nic
 
-
-        def volumes
-          volume_attrs = attributes[:drives] || []
-          refreshed_vols = volume_attrs.map { |v| MountPoint.new(v) }
-          #Save back to attributes so that the attributes of Server are the same objects as the volume attributes, so
-          #that updating volumes updates the parent attributes
-          attributes[:drives] = refreshed_vols.map { |v| v.attributes }
-
-          refreshed_vols
-        end
-
-        def volumes=(new_volumes)
-          new_volumes ||= []
-          attributes[:drives] = new_volumes.map { |v| v.kind_of?(Hash) ? v : v.attributes }
-        end
-
-        def nics
-          nics_attrs = attributes[:nics] || []
-          refreshed_nics = nics_attrs.map { |n| Nic.new(n) }
-          #Save back to attributes so that the attributes of Server are the same objects as the nic attributes, so
-          #that updating nics updates the parent attributes
-          attributes[:nics] = refreshed_nics.map { |n| n.attributes }
-
-          refreshed_nics
-        end
-
-        def nics=(new_nics)
-          new_nics ||= []
-          attributes[:nics] = new_nics.map { |n| n.kind_of?(Hash) ? n : n.attributes }
-        end
 
         def save
           if persisted?
@@ -65,23 +39,7 @@ module Fog
 
         def create
           requires :name, :cpu, :mem, :vnc_password
-          data = {
-              'name' => name,
-              'cpu' => cpu,
-              'mem' => mem,
-              'vnc_password' => vnc_password,
-
-              'drives' => attributes[:drives] || [],
-              'nics' => attributes[:nics] || [],
-              'smp' => smp || 1,
-              'meta' => meta || {},
-              'tags' => tags || [],
-
-              'cpus_instead_of_cores' => cpus_instead_of_cores || false,
-              'enable_numa' => enable_numa || false,
-              'hv_relaxed' => hv_relaxed || false,
-              'hv_tsc' => hv_tsc || false
-          }
+          data = attributes
 
           response = service.create_server(data)
           new_attributes = response.body['objects'].first
@@ -91,23 +49,7 @@ module Fog
         def update
           requires :identity, :name, :cpu, :mem, :vnc_password
 
-          data = {
-              'name' => name,
-              'cpu' => cpu,
-              'mem' => mem,
-              'vnc_password' => vnc_password,
-
-              'drives' => attributes[:drives] || [],
-              'nics' => attributes[:nics] || [],
-              'smp' => smp || 1,
-              'meta' => meta || {},
-              'tags' => tags || [],
-
-              'cpus_instead_of_cores' => cpus_instead_of_cores || false,
-              'enable_numa' => enable_numa || false,
-              'hv_relaxed' => hv_relaxed || false,
-              'hv_tsc' => hv_tsc || false
-          }
+          data = attributes
 
           response = service.update_server(identity, data)
           new_attributes = response.body

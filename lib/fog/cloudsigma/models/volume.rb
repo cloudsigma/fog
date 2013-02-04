@@ -1,9 +1,9 @@
-require 'fog/core/model'
+require 'fog/cloudsigma/nested_model'
 
 module Fog
   module Compute
     class CloudSigma
-      class Volume < Fog::Model
+      class Volume < Fog::CloudSigma::CloudsigmaModel
         identity :id, :aliases => 'uuid'
 
         attribute :status, :type => :string
@@ -31,15 +31,7 @@ module Fog
 
         def create
           requires :name, :size, :media
-          data = {
-              'name' => name,
-              'size' => size,
-              'media' => media,
-              'affinities' => affinities || [],
-              'meta' => meta || {},
-              'tags' => tags || [],
-              'allow_multimount' => false
-          }
+          data = attributes
 
           response = service.create_volume(data)
           new_attributes = response.body['objects'].first
@@ -49,15 +41,7 @@ module Fog
         def update
           requires :identity, :name, :size, :media
 
-          data = {
-              'name' => name,
-              'size' => size,
-              'media' => media,
-              'affinities' => affinities || [],
-              'meta' => meta || {},
-              'tags' => tags || [],
-              'allow_multimount' => false
-          }
+          data = attributes()
 
           response = service.update_volume(identity, data)
           new_attributes = response.body

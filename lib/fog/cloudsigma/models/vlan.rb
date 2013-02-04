@@ -1,9 +1,9 @@
-require 'fog/core/model'
+require 'fog/cloudsigma/nested_model'
 
 module Fog
   module Compute
     class CloudSigma
-      class VLAN < Fog::Model
+      class VLAN < Fog::CloudSigma::CloudsigmaModel
         identity :id, :aliases => 'uuid'
         attribute :tags
         attribute :servers
