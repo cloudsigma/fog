@@ -4,7 +4,7 @@ module Fog
   module Compute
     class CloudSigma
       class VLAN < Fog::CloudSigma::CloudsigmaModel
-        identity :id, :aliases => 'uuid'
+        identity :uuid
         attribute :tags
         attribute :servers
         attribute :meta

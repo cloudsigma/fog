@@ -4,7 +4,7 @@ module Fog
   module Compute
     class CloudSigma
       class LibVolume < Fog::Model
-        identity :id, :aliases => 'uuid'
+        identity :uuid
 
         attribute :mounted_on, :type => :related
         attribute :licenses

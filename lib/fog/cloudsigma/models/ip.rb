@@ -4,7 +4,7 @@ module Fog
   module Compute
     class CloudSigma
       class IP < Fog::CloudSigma::CloudsigmaModel
-        identity :ip, :aliases => 'uuid'
+        identity :uuid
         attribute :tags, :type => :array
         attribute :nameservers, :type => :array
         attribute :server, :type => :string

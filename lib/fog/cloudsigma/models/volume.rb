@@ -4,7 +4,7 @@ module Fog
   module Compute
     class CloudSigma
       class Volume < Fog::CloudSigma::CloudsigmaModel
-        identity :id, :aliases => 'uuid'
+        identity :uuid
 
         attribute :status, :type => :string
         attribute :jobs

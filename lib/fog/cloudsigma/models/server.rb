@@ -8,7 +8,7 @@ module Fog
       class Server < Fog::CloudSigma::CloudsigmaModel
 
 
-        identity :id, :aliases => 'uuid'
+        identity :uuid
 
         attribute :status, :type => :string
         attribute :vnc_password, :type => :string
