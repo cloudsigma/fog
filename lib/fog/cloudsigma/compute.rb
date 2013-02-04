@@ -61,6 +61,9 @@ module Fog
 
       request :list_subscriptions
       request :get_subscription
+      request :create_subscription
+      request :extend_subscription
+
 
 
       class Mock

@@ -21,6 +21,32 @@ module Fog
         attribute :subscribed_object, :type => :string
         attribute :discount_amount, :type => :float
 
+        def save
+          create
+        end
+
+        def create
+          requires :resource, :amount
+          data = attributes
+
+          response = service.create_subscription(data)
+          new_attributes = response.body['objects'].first
+          merge_attributes(new_attributes)
+        end
+
+        def extend(period=nil, end_time=nil)
+          requires :identity
+          data = {}
+          if period
+            data[:period] = period
+          elsif end_time
+            data[:end_time] = end_time
+          end
+          response = service.extend_subscription(identity, data)
+
+          self.class.new(response.body)
+        end
+
       end
     end
   end
