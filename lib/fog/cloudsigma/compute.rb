@@ -1,6 +1,7 @@
 require 'fog/compute'
 require 'fog/cloudsigma'
 
+
 module Fog
   module Compute
     class CloudSigma < Fog::Service
@@ -13,7 +14,6 @@ module Fog
 
       model :volume
       collection :volumes
-
       request :create_volume
       request :get_volume
       request :list_volumes
@@ -23,7 +23,6 @@ module Fog
 
       model :lib_volume
       collection :lib_volumes
-
       request :get_lib_volume
       request :list_lib_volumes
 
@@ -32,7 +31,6 @@ module Fog
       model :mountpoint
       model :server
       collection :servers
-
       request :create_server
       request :get_server
       request :list_servers
@@ -46,24 +44,33 @@ module Fog
 
       model :ip
       collection :ips
-
       request :list_ips
       request :get_ip
 
       model :vlan
       collection :vlans
-
       request :list_vlans
       request :get_vlan
 
       model :subscription
       collection :subscriptions
-
       request :list_subscriptions
       request :get_subscription
       request :create_subscription
       request :extend_subscription
 
+      model :price_calculation
+      request :calculate_subscription_price
+
+      model :profile
+      request :get_profile
+      request :update_profile
+
+      model :balance
+      request :get_balance
+
+      model :current_usage
+      request :get_current_usage
 
 
       class Mock
@@ -105,6 +112,23 @@ module Fog
           @init_options = options
 
           setup_connection(options)
+        end
+
+        def profile
+          response = get_profile
+          Profile.new(response.body)
+        end
+
+        def balance
+          response = get_balance
+
+          Balance.new(response.body)
+        end
+
+        def current_usage
+          response = get_current_usage
+
+          CurrentUsage.new(response.body['usage'])
         end
 
       end

@@ -13,12 +13,26 @@ module Fog
           load(data)
         end
 
-        def get(vlan)
-          resp = service.get_subscription(vlan)
+        def get(sub_id)
+          resp = service.get_subscription(sub_id)
           data = resp.body
           new(data)
         end
 
+        def check_price(subscriptions_list)
+          subscriptions_list = subscriptions_list.map {|s| s.kind_of?(Hash) ? s : s.attributes}
+
+          resp = service.calculate_subscription_price(subscriptions_list)
+
+          PriceCalculation.new(resp.body)
+        end
+
+        def create_multiple(subscriptions_list)
+          subscriptions_list = subscriptions_list.map { |s| s.kind_of?(Hash) ? s : s.attributes }
+
+          resp = service.create_subscription(subscriptions_list)
+          resp.body['objects'].map { |s| Subscription.new(s) }
+        end
       end
     end
   end
