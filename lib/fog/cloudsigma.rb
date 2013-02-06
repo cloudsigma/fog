@@ -5,6 +5,27 @@ module Fog
 
     extend Fog::Provider
 
+    module Errors
+      class Error < Fog::Errors::Error
+        attr_accessor :type, :error_point
+
+        def self.slurp(error)
+          new_error = new(error.response.body.first['error_message'],
+                          error.response.body.first['error_type'],
+                          error.response.body.first['error_point'])
+          new_error.set_backtrace(error.backtrace)
+          new_error.verbose = error.message
+          new_error
+        end
+
+        def initialize(message, type='n/a', error_point=nil)
+          @type = type
+          @error_point = error_point
+          super(message)
+        end
+      end
+
+    end
 
     module CloudSigmaConnection
 
@@ -57,7 +78,15 @@ module Fog
 
         params[:body] = Fog::JSON.encode(params[:body]) if params[:body]
 
-        response = @connection.request(params)
+        begin
+          response = @connection.request(params)
+        rescue Excon::Errors::HTTPStatusError => e
+
+          e.response.body = Fog::JSON.decode(e.response.body) unless e.response.body.empty?
+          err = Fog::CloudSigma::Errors::Error.slurp(e)
+
+          raise err
+        end
         response.body = Fog::JSON.decode(response.body) unless response.body.empty?
 
         response
