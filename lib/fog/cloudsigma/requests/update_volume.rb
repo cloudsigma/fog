@@ -9,14 +9,7 @@ module Fog
 
       class Mock
         def update_volume(vol_id, data)
-          volume = self.data[:volumes][vol_id]
-          volume.merge!(data)
-
-          response = Excon::Response.new
-          response.status = 200
-          response.body = volume
-
-          response
+          mock_update(data, :volumes, 200,  vol_id)
         end
       end
 

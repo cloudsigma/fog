@@ -9,6 +9,7 @@ module Fog
 
       class Mock
         def update_profile(data)
+          mock_update(data, :profile, 200)
         end
       end
 

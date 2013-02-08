@@ -9,12 +9,7 @@ module Fog
 
       class Mock
         def delete_server(server_id)
-          self.data[:servers].delete(server_id)
-
-          response = Excon::Response.new
-          response.status = 204
-
-          response
+          mock_delete(:servers, 204, server_id)
         end
       end
 

@@ -9,13 +9,7 @@ module Fog
 
       class Mock
         def list_ips
-          data_array = self.data[:ips].values
-
-          response = Excon::Response.new
-          response.status = 200
-          response.body = {'objects' => data_array}
-
-          response
+          mock_list(:ips, 200)
         end
       end
 

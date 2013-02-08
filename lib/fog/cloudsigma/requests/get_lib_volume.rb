@@ -9,14 +9,7 @@ module Fog
 
       class Mock
         def get_lib_volume(vol_id)
-          data = self.data[:libvolumes][vol_id]
-
-          response = Excon::Response.new
-          response.status = 200
-          response.body = data
-
-          response
-
+          mock_get(:libvolumes, 200, vol_id)
         end
       end
 

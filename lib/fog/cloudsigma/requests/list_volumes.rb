@@ -9,13 +9,7 @@ module Fog
 
       class Mock
         def list_volumes
-          data_array = self.data[:volumes].values
-
-          response = Excon::Response.new
-          response.status = 200
-          response.body = {'objects' => data_array}
-
-          response
+          mock_list(:volumes, 200)
         end
       end
 

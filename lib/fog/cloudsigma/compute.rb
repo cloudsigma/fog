@@ -73,15 +73,34 @@ module Fog
       request :get_current_usage
 
 
+      module CommonMockAndReal
+        def profile
+          response = get_profile
+          Profile.new(response.body)
+        end
+
+        def balance
+          response = get_balance
+
+          Balance.new(response.body)
+        end
+
+        def current_usage
+          response = get_current_usage
+
+          CurrentUsage.new(response.body['usage'])
+        end
+
+      end
+
       class Mock
         include Collections
+        include CommonMockAndReal
+        require 'fog/cloudsigma/mock_data'
 
         def self.data
           @data ||= Hash.new do |hash, key|
-            hash[key] = {
-                :volumes => {},
-                :servers => {},
-            }
+            hash[key] = mock_data
           end
         end
 
@@ -102,10 +121,47 @@ module Fog
           #setup_connection(options)
         end
 
+        def mock_get(obj_or_collection, status, key=nil)
+          data = self.data[obj_or_collection]
+          if key
+            data = data[key]
+            unless data
+              raise Fog::CloudSigma::Errors::Error.new("Object with uuid #{key} does not exist", 'notexist')
+            end
+          end
+
+          Excon::Response.new(:body => data, :status => status)
+        end
+
+        def mock_list(collection, status)
+          data_array = self.data[collection].values
+
+          Excon::Response.new(:body => {'objects' => data_array}, :status => status)
+        end
+
+        def mock_update(data, obj_or_collection, status, key)
+          if key
+            unless self.data[obj_or_collection][key]
+              raise Fog::CloudSigma::Errors::Error.new("Object with uuid #{key} does not exist", 'notexist')
+            end
+            resp_data = self.data[obj_or_collection][key].merge!(data)
+          else
+            resp_data = self.data[obj_or_collection].merge!(data)
+          end
+
+          Excon::Response.new(:body => resp_data, :status => status)
+        end
+        def mock_delete(collection, status, key)
+          self.data[collection].delete(key)
+
+          Excon::Response.new(:body => '', :status => status)
+        end
+
       end
 
       class Real
         include Collections
+        include CommonMockAndReal
         include Fog::CloudSigma::CloudSigmaConnection
 
         def initialize(options={})
@@ -114,22 +170,6 @@ module Fog
           setup_connection(options)
         end
 
-        def profile
-          response = get_profile
-          Profile.new(response.body)
-        end
-
-        def balance
-          response = get_balance
-
-          Balance.new(response.body)
-        end
-
-        def current_usage
-          response = get_current_usage
-
-          CurrentUsage.new(response.body['usage'])
-        end
 
       end
 

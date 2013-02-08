@@ -9,14 +9,7 @@ module Fog
 
       class Mock
         def get_ip(ip)
-          data = self.data[:ips][ip]
-
-          response = Excon::Response.new
-          response.status = 200
-          response.body = data
-
-          response
-
+          mock_get(:ips, 200, ip)
         end
       end
 

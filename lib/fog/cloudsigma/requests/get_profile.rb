@@ -9,7 +9,7 @@ module Fog
 
       class Mock
         def get_profile
-
+          mock_get(:profile,  200)
         end
       end
 

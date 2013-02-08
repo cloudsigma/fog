@@ -9,14 +9,7 @@ module Fog
 
       class Mock
         def get_subscription(sub_id)
-          data = self.data[:subscriptions][sub_id]
-
-          response = Excon::Response.new
-          response.status = 200
-          response.body = data
-
-          response
-
+          mock_get(:subscriptions, 200, sub_id)
         end
       end
 

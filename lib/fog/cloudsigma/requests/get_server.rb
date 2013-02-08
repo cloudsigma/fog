@@ -9,14 +9,7 @@ module Fog
 
       class Mock
         def get_server(server_id)
-          data = self.data[:servers][server_id]
-
-          response = Excon::Response.new
-          response.status = 200
-          response.body = data
-
-          response
-
+          mock_get(:servers, 200, server_id)
         end
       end
 

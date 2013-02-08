@@ -9,14 +9,7 @@ module Fog
 
       class Mock
         def update_server(server_id, data)
-          server = self.data[:servers][server_id]
-          server.merge!(data)
-
-          response = Excon::Response.new
-          response.status = 200
-          response.body = server
-
-          response
+          mock_update(data, :servers, 200,  server_id)
         end
       end
 

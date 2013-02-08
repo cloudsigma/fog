@@ -9,7 +9,7 @@ module Fog
 
       class Mock
         def get_balance
-
+          mock_get(:balance,  200)
         end
       end
 

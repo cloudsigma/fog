@@ -9,14 +9,7 @@ module Fog
 
       class Mock
         def get_vlan(vlan)
-          data = self.data[:vlans][vlan]
-
-          response = Excon::Response.new
-          response.status = 200
-          response.body = data
-
-          response
-
+          mock_get(:vlans, 200, vlan)
         end
       end
 
