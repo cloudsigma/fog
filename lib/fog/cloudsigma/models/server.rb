@@ -184,13 +184,13 @@ module Fog
             when :manual
               add_nic(nil, {:conf => :manual}, model, boot_order)
             else
-              ip = ip_or_conf.kind_of?(String) ? ip_or_conf : ip_or_conf.ip
+              ip = ip_or_conf.kind_of?(String) ? ip_or_conf : ip_or_conf.identity
               add_nic(nil, {:conf => :static, :ip => ip}, nil, model, boot_order)
           end
         end
 
         def add_private_nic(vlan, model='virtio', boot_order=nil)
-          vlan = vlan.kind_of?(String) ? vlan : vlan.id
+          vlan = vlan.kind_of?(String) ? vlan : vlan.identity
           add_nic(vlan, nil, nil, model, boot_order)
         end
 
