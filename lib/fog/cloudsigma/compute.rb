@@ -71,6 +71,9 @@ module Fog
       model :current_usage
       request :get_current_usage
 
+      model :pricing
+      request :get_pricing
+
 
       module CommonMockAndReal
         def profile
@@ -88,6 +91,84 @@ module Fog
           response = get_current_usage
 
           CurrentUsage.new(response.body['usage'])
+        end
+
+        def currency
+          # Cache since currency does not change
+          @currency ||= profile.currency
+
+        end
+
+        def pricing
+          resp = get_princing(currency)
+
+          resp.body['objects']
+        end
+
+        def current_pricing_levels
+          resp = get_pricing(currency)
+
+          resp.body['current']
+        end
+
+        def next_pricing_levels
+          resp = get_pricing(currency)
+
+          resp.body['next']
+        end
+
+        def subscription_pricing
+          resp = get_pricing(currency, true)
+
+          current_levels = resp.body['current']
+          current_prices = resp.body['objects']
+
+          current_pricing_pairs = current_levels.map do |resource, level|
+            price_for_resource_and_level = current_prices.detect do |price|
+              price['resource'] == resource
+            end
+            price_for_resource_and_level ||= {}
+
+            [resource, price_for_resource_and_level]
+          end
+
+          Pricing.new(Hash[current_pricing_pairs])
+        end
+
+        def current_pricing
+          resp = get_pricing(currency)
+
+          current_levels = resp.body['current']
+          current_prices = resp.body['objects']
+
+          current_pricing_pairs = current_levels.map do |resource, level|
+            price_for_resource_and_level = current_prices.detect do |price|
+              price['level'] == level && price['resource'] == resource
+            end
+            price_for_resource_and_level ||= {}
+
+            [resource, price_for_resource_and_level]
+          end
+
+          Pricing.new(Hash[current_pricing_pairs])
+        end
+
+        def next_pricing
+          resp = get_pricing(currency)
+
+          current_levels = resp.body['next']
+          current_prices = resp.body['objects']
+
+          current_pricing_pairs = current_levels.map do |resource, level|
+            price_for_resource_and_level = current_prices.detect do |price|
+              price['level'] == level && price['resource'] == resource
+            end
+            price_for_resource_and_level ||= {}
+
+            [resource, price_for_resource_and_level]
+          end
+
+          Pricing.new(Hash[current_pricing_pairs])
         end
 
       end
