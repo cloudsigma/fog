@@ -51,7 +51,7 @@ module Fog
 
         @auth_type = options[:cloudsigma_auth_type] || :basic
 
-        @username = options[:cloudsigma_user_name]
+        @username = options[:cloudsigma_username]
         @password = options[:cloudsigma_password]
 
         @scheme = options[:cloudsigma_scheme] || 'https'
