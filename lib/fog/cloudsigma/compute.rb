@@ -129,7 +129,7 @@ module Fog
             end
           end
 
-          Excon::Response.new(:body => data, :status => status)
+          Excon::Response.new(:body => Fog::JSON.decode(Fog::JSON.encode(data)), :status => status)
         end
 
         def mock_list(collection, status)
@@ -139,16 +139,24 @@ module Fog
         end
 
         def mock_update(data, obj_or_collection, status, key)
+          # TODO: Remove when API is fixed
+          # Fix API wierdness for returning strings instead of numbers, so that the same tests are applicable for
+          # both mocks and real infra
+          data = Hash[data.map {|k,v| [k, v.kind_of?(Numeric) ? v.to_s : v]}]
           if key
             unless self.data[obj_or_collection][key]
               raise Fog::CloudSigma::Errors::Error.new("Object with uuid #{key} does not exist", 'notexist')
             end
-            resp_data = self.data[obj_or_collection][key].merge!(data)
+            new_data = self.data[obj_or_collection][key].merge(data)
+            reencoded_data = Fog::JSON.decode(Fog::JSON.encode(new_data))
+            self.data[obj_or_collection][key] = reencoded_data
           else
-            resp_data = self.data[obj_or_collection].merge!(data)
+            new_data = self.data[obj_or_collection].merge(data)
+            reencoded_data = Fog::JSON.decode(Fog::JSON.encode(new_data))
+            self.data[obj_or_collection] = reencoded_data
           end
 
-          Excon::Response.new(:body => resp_data, :status => status)
+          Excon::Response.new(:body =>  Fog::JSON.decode(Fog::JSON.encode(new_data)), :status => status)
         end
 
         def mock_delete(collection, status, key)
