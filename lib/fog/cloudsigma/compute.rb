@@ -150,12 +150,33 @@ module Fog
 
           Excon::Response.new(:body => resp_data, :status => status)
         end
+
         def mock_delete(collection, status, key)
           self.data[collection].delete(key)
 
           Excon::Response.new(:body => '', :status => status)
         end
 
+        def mock_create(collection, status, data, key, defaults={})
+          data_with_defaults = data.merge(defaults) {|k, oldval, newval| oldval == nil ? newval: oldval}
+          # TODO: Remove when API is fixed
+          # Fix API wierdness for returning strings instead of numbers, so that the same tests are applicable for
+          # both mocks and real infra
+          without_numbers = Hash[data_with_defaults.map {|k,v| [k, v.kind_of?(Numeric) ? v.to_s : v]}]
+          # Encode and decode into JSON so that the result is the same as the one returned and parsed from the API
+          final_data =  Fog::JSON.decode(Fog::JSON.encode(without_numbers))
+
+          self.data[collection][key] = final_data
+
+          # dup so that stored data is different instance from response data
+          response_data = final_data.dup
+
+          response = Excon::Response.new
+          response.body = {'objects' => [response_data]}
+          response.status = status
+
+          response
+        end
       end
 
       class Real

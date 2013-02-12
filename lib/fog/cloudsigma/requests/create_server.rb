@@ -10,15 +10,20 @@ module Fog
       class Mock
         def create_server(data)
           uuid = self.class.random_uuid
-          data['uuid'] = uuid
-          data['status'] = 'stopped'
-          response = Excon::Response.new
-          response.body = {'objects' => [data]}
-          response.status = 202
 
-          self.data[:servers][uuid] = data
+          defaults = {'uuid' => uuid,
+                      'status' => 'stopped',
+                      'smp' => 1,
+                      'hv_relaxed' => false,
+                      'hv_tsc' => false,
+                      'enable_numa' => false,
+                      'cpus_instead_of_cores' => false,
+                      'drives' => [],
+                      'nics' => [],
+                      'tags' => []
+          }
 
-          response
+          mock_create(:servers, 202, data, uuid, defaults)
         end
       end
 
