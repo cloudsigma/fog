@@ -21,7 +21,7 @@ Shindo.tests('Fog::Compute[:cloudsigma] | server requests', ['cloudsigma']) do
       'nics' => Array
   }
 
-  @server_create_args = {:name => 'fogtest', :cpu => 1000, :mem => 512*1024**2, :vnc_password => 'myrandompass'}
+  @server_create_args = {:name => 'fogtest', :cpu => 2000, :mem => 512*1024**2, :vnc_password => 'myrandompass'}
 
   tests('success') do
 
@@ -37,12 +37,34 @@ Shindo.tests('Fog::Compute[:cloudsigma] | server requests', ['cloudsigma']) do
     end
 
     tests("#update_server(#@server_uuid)").formats(@server_format, false) do
-      @resp_server['cpu'] = 2000
+      @resp_server['cpu'] = 1000
       @resp_server = Fog::Compute[:cloudsigma].update_server(@server_uuid, @resp_server).body
 
       @resp_server
 
     end
+
+    tests("#start_server(#@server_uuid)").succeeds do
+      response = Fog::Compute[:cloudsigma].start_server(@server_uuid)
+
+      response.body['result'] == "success"
+    end
+
+
+    server = Fog::Compute[:cloudsigma].servers.get(@server_uuid)
+    server.wait_for { status == 'running' }
+
+
+    tests("#stop_server(#@server_uuid)").succeeds do
+      response = Fog::Compute[:cloudsigma].stop_server(@server_uuid)
+
+      response.body['result'] == "success"
+    end
+
+
+    server = Fog::Compute[:cloudsigma].servers.get(@server_uuid)
+    server.wait_for { status == 'stopped' }
+
 
     tests("#delete_server(#@server_uuid)").succeeds do
       resp = Fog::Compute[:cloudsigma].delete_server(@server_uuid)
