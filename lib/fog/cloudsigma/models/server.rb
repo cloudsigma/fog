@@ -66,11 +66,6 @@ module Fog
 
         alias :delete :destroy
 
-        def reload
-          requires :identity
-          collection.get(identity)
-        end
-
         def start(start_params={})
           requires :identity
           service.start_server(identity, start_params)

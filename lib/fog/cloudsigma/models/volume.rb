@@ -59,11 +59,6 @@ module Fog
 
         alias :delete :destroy
 
-        def reload
-          requires :identity
-          collection.get(identity)
-        end
-
         def clone(clone_params={})
           requires :identity
           response = service.clone_volume(identity, clone_params)
