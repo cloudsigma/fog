@@ -220,10 +220,6 @@ module Fog
         end
 
         def mock_update(data, obj_or_collection, status, key)
-          # TODO: Remove when API is fixed
-          # Fix API wierdness for returning strings instead of numbers, so that the same tests are applicable for
-          # both mocks and real infra
-          data = Hash[data.map {|k,v| [k, v.kind_of?(Numeric) ? v.to_s : v]}]
           if key
             unless self.data[obj_or_collection][key]
               raise Fog::CloudSigma::Errors::Error.new("Object with uuid #{key} does not exist", 'notexist')
@@ -246,14 +242,17 @@ module Fog
           Excon::Response.new(:body => '', :status => status)
         end
 
-        def mock_create(collection, status, data, key, defaults={})
+        def mock_create(collection, status, data, key, defaults={}, &clean_before_store)
           data_with_defaults = data.merge(defaults) {|k, oldval, newval| oldval == nil ? newval: oldval}
-          # TODO: Remove when API is fixed
-          # Fix API wierdness for returning strings instead of numbers, so that the same tests are applicable for
-          # both mocks and real infra
-          without_numbers = Hash[data_with_defaults.map {|k,v| [k, v.kind_of?(Numeric) ? v.to_s : v]}]
+
+          if clean_before_store
+            cleaned_data = clean_before_store.call(data_with_defaults)
+          else
+            cleaned_data = data_with_defaults
+          end
+
           # Encode and decode into JSON so that the result is the same as the one returned and parsed from the API
-          final_data =  Fog::JSON.decode(Fog::JSON.encode(without_numbers))
+          final_data =  Fog::JSON.decode(Fog::JSON.encode(cleaned_data))
 
           self.data[collection][key] = final_data
 
