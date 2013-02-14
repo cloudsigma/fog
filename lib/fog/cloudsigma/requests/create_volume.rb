@@ -10,17 +10,18 @@ module Fog
       class Mock
         def create_volume(data)
           uuid = self.class.random_uuid
-          data['uuid'] = uuid
-          data['status'] = 'creating'
-          response = Excon::Response.new
-          response.body = {'objects' => [data]}
-          response.status = 202
 
-          ready_volume = data.dup # new copy so that it is active on call to list
-          ready_volume['status'] = 'active'
-          self.data[:volumes][uuid] = ready_volume
+          defaults = {'uuid' => uuid,
+                      'status' => 'unmounted',
+                      'tags' => [],
+                      'mounted_on' => [],
+                      'affinities' => [],
+                      'licenses' => [],
+                      'jobs' => [],
+                      'allow_multimount' => false,
+          }
 
-          response
+          mock_create(:volumes, 202, data, uuid, defaults)
         end
       end
 
