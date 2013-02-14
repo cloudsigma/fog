@@ -58,7 +58,7 @@ module Fog
         rescue Excon::Errors::HTTPStatusError => e
 
           e.response.body = Fog::JSON.decode(e.response.body) unless e.response.body.empty?
-          err = Fog::CloudSigma::Errors::Error.slurp(e)
+          err = Fog::CloudSigma::Errors.slurp_http_status_error(e)
 
           raise err
         end

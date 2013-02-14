@@ -74,7 +74,7 @@ Shindo.tests('Fog::Compute[:cloudsigma] | server requests', ['cloudsigma']) do
   end
 
   tests('failure') do
-    tests("#get_server(#@server_uuid)|deleted|").raises(Fog::CloudSigma::Errors::Error) do
+    tests("#get_server(#@server_uuid)|deleted|").raises(Fog::CloudSigma::Errors::NotFound) do
       Fog::Compute[:cloudsigma].get_server(@server_uuid).body
     end
   end

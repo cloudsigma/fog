@@ -46,4 +46,10 @@ Shindo.tests('Fog::Compute[:cloudsigma] | volume requests', ['cloudsigma']) do
 
   end
 
+  tests('failure') do
+    tests("#get_volume(#@server_uuid)|deleted|").raises(Fog::CloudSigma::Errors::NotFound) do
+      Fog::Compute[:cloudsigma].get_volume(@volume_uuid).body
+    end
+  end
+
 end

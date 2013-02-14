@@ -206,7 +206,7 @@ module Fog
           if key
             data = data[key]
             unless data
-              raise Fog::CloudSigma::Errors::Error.new("Object with uuid #{key} does not exist", 'notexist')
+              raise Fog::CloudSigma::Errors::NotFound.new("Object with uuid #{key} does not exist", 'notexist')
             end
           end
 
@@ -222,7 +222,7 @@ module Fog
         def mock_update(data, obj_or_collection, status, key)
           if key
             unless self.data[obj_or_collection][key]
-              raise Fog::CloudSigma::Errors::Error.new("Object with uuid #{key} does not exist", 'notexist')
+              raise Fog::CloudSigma::Errors::NotFound.new("Object with uuid #{key} does not exist", 'notexist')
             end
             new_data = self.data[obj_or_collection][key].merge(data)
             reencoded_data = Fog::JSON.decode(Fog::JSON.encode(new_data))
