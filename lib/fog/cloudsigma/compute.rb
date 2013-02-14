@@ -76,6 +76,12 @@ module Fog
 
 
       module CommonMockAndReal
+        def initialize(options={})
+          @init_options = options
+
+          setup_connection(options)
+        end
+
         def profile
           response = get_profile
           Profile.new(response.body)
@@ -176,6 +182,7 @@ module Fog
       class Mock
         include Collections
         include CommonMockAndReal
+        include Fog::CloudSigma::CloudSigmaConnection::Mock
         require 'fog/cloudsigma/mock_data'
 
         def self.data
@@ -194,90 +201,12 @@ module Fog
         def data
           self.class.data[:test]
         end
-
-        def initialize(options={})
-          @init_options = options
-
-          #setup_connection(options)
-        end
-
-        def mock_get(obj_or_collection, status, key=nil)
-          data = self.data[obj_or_collection]
-          if key
-            data = data[key]
-            unless data
-              raise Fog::CloudSigma::Errors::NotFound.new("Object with uuid #{key} does not exist", 'notexist')
-            end
-          end
-
-          Excon::Response.new(:body => Fog::JSON.decode(Fog::JSON.encode(data)), :status => status)
-        end
-
-        def mock_list(collection, status)
-          data_array = self.data[collection].values
-
-          Excon::Response.new(:body => {'objects' => data_array}, :status => status)
-        end
-
-        def mock_update(data, obj_or_collection, status, key)
-          if key
-            unless self.data[obj_or_collection][key]
-              raise Fog::CloudSigma::Errors::NotFound.new("Object with uuid #{key} does not exist", 'notexist')
-            end
-            new_data = self.data[obj_or_collection][key].merge(data)
-            reencoded_data = Fog::JSON.decode(Fog::JSON.encode(new_data))
-            self.data[obj_or_collection][key] = reencoded_data
-          else
-            new_data = self.data[obj_or_collection].merge(data)
-            reencoded_data = Fog::JSON.decode(Fog::JSON.encode(new_data))
-            self.data[obj_or_collection] = reencoded_data
-          end
-
-          Excon::Response.new(:body =>  Fog::JSON.decode(Fog::JSON.encode(new_data)), :status => status)
-        end
-
-        def mock_delete(collection, status, key)
-          self.data[collection].delete(key)
-
-          Excon::Response.new(:body => '', :status => status)
-        end
-
-        def mock_create(collection, status, data, key, defaults={}, &clean_before_store)
-          data_with_defaults = data.merge(defaults) {|k, oldval, newval| oldval == nil ? newval: oldval}
-
-          if clean_before_store
-            cleaned_data = clean_before_store.call(data_with_defaults)
-          else
-            cleaned_data = data_with_defaults
-          end
-
-          # Encode and decode into JSON so that the result is the same as the one returned and parsed from the API
-          final_data =  Fog::JSON.decode(Fog::JSON.encode(cleaned_data))
-
-          self.data[collection][key] = final_data
-
-          # dup so that stored data is different instance from response data
-          response_data = final_data.dup
-
-          response = Excon::Response.new
-          response.body = {'objects' => [response_data]}
-          response.status = status
-
-          response
-        end
       end
 
       class Real
         include Collections
         include CommonMockAndReal
-        include Fog::CloudSigma::CloudSigmaConnection
-
-        def initialize(options={})
-          @init_options = options
-
-          setup_connection(options)
-        end
-
+        include Fog::CloudSigma::CloudSigmaConnection::Real
 
       end
 
