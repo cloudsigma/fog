@@ -17,6 +17,8 @@ module Fog
           resp = service.get_subscription(sub_id)
           data = resp.body
           new(data)
+        rescue Fog::CloudSigma::Errors::NotFound
+          return nil
         end
 
         def check_price(subscriptions_list)

@@ -17,6 +17,8 @@ module Fog
           resp = service.get_server(server_id)
           data = resp.body
           new(data)
+        rescue Fog::CloudSigma::Errors::NotFound
+          return nil
         end
 
       end

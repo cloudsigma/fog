@@ -17,6 +17,8 @@ module Fog
           resp = service.get_vlan(vlan)
           data = resp.body
           new(data)
+        rescue Fog::CloudSigma::Errors::NotFound
+          return nil
         end
 
       end
