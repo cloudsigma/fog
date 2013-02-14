@@ -9,11 +9,7 @@ module Fog
 
       class Mock
         def update_server(server_id, data)
-          # TODO: Remove when API is fixed
-          # Fix API wierdness for returning strings instead of numbers, so that the same tests are applicable for
-          # both mocks and real infra
-          cleaned_data = Hash[data.map {|k,v| [k, v.kind_of?(Numeric) ? v.to_s : v]}]
-          mock_update(cleaned_data, :servers, 200,  server_id)
+          mock_update(data, :servers, 200,  server_id)
         end
       end
 
