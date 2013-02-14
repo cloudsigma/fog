@@ -3,7 +3,7 @@ module Fog
     class CloudSigma
       class Real
         def get_lib_volume(vol_id)
-          request(:path => "libdrives/#{vol_id}/", :method => 'GET', :expects => 200)
+          get_request("libdrives/#{vol_id}/")
         end
       end
 

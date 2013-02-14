@@ -3,7 +3,7 @@ module Fog
     class CloudSigma
       class Real
         def create_subscription(data)
-          request(:path => "subscriptions/", :method => 'POST', :expects => [200, 202], :body=>data)
+          create_request("subscriptions/", data)
         end
       end
 

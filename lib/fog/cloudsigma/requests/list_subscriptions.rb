@@ -3,7 +3,7 @@ module Fog
     class CloudSigma
       class Real
         def list_subscriptions
-          request(:path => 'subscriptions/', :method => 'GET', :expects => [200])
+          list_request('subscriptions/')
         end
       end
 

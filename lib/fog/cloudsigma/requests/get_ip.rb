@@ -3,7 +3,7 @@ module Fog
     class CloudSigma
       class Real
         def get_ip(ip)
-          request(:path => "ips/#{ip}/", :method => 'GET', :expects => 200)
+          request("ips/#{ip}/")
         end
       end
 

@@ -3,7 +3,7 @@ module Fog
     class CloudSigma
       class Real
         def list_servers
-          request(:path => 'servers/detail/', :method => 'GET', :expects => [200])
+          list_request('servers/detail/')
         end
       end
 

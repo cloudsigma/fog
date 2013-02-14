@@ -3,7 +3,7 @@ module Fog
     class CloudSigma
       class Real
         def list_vlans
-          request(:path => 'vlans/detail/', :method => 'GET', :expects => [200])
+          list_request('vlans/detail/')
         end
       end
 

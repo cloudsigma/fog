@@ -3,7 +3,7 @@ module Fog
     class CloudSigma
       class Real
         def update_profile(data)
-          request(:path => "profile/", :method => 'PUT', :expects => [200], :body=>data)
+          update_request("profile/", data)
         end
       end
 

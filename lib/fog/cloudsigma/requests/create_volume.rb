@@ -3,7 +3,7 @@ module Fog
     class CloudSigma
       class Real
         def create_volume(data)
-          request(:path => "drives/", :method => 'POST', :expects => [200, 202], :body=>data)
+          create_request("drives/", data)
         end
       end
 

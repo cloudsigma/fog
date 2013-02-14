@@ -3,7 +3,7 @@ module Fog
     class CloudSigma
       class Real
         def update_server(server_id, data)
-          request(:path => "servers/#{server_id}/", :method => 'PUT', :expects => [200, 202], :body=>data)
+          update_request("servers/#{server_id}/", data)
         end
       end
 

@@ -3,7 +3,7 @@ module Fog
     class CloudSigma
       class Real
         def get_vlan(vlan)
-          request(:path => "vlans/#{vlan}/", :method => 'GET', :expects => 200)
+          get_request("vlans/#{vlan}/")
         end
       end
 

@@ -67,6 +67,49 @@ module Fog
         response
       end
 
+      def list_request(path, override_params={})
+        default_params = {:method => 'GET', :expects => 200, :query => {:limit => 0}}
+        override_params[:path] = path
+        params = default_params.merge(override_params)
+
+        request(params)
+      end
+
+      def get_request(path, override_params={})
+        default_params = {:method => 'GET', :expects => 200}
+        override_params[:path] = path
+        params = default_params.merge(override_params)
+
+        request(params)
+      end
+
+      def delete_request(path, override_params={})
+        default_params = {:method => 'DELETE', :expects => 204}
+        override_params[:path] = path
+        params = default_params.merge(override_params)
+
+        request(params)
+      end
+
+      def create_request(path, data, override_params={})
+        default_params = {:method => 'POST', :expects => [200, 202]}
+
+        override_params[:path] = path
+        override_params[:body] = data
+        params = default_params.merge(override_params)
+
+        request(params)
+      end
+
+      def update_request(path, data, override_params={})
+        default_params = {:method => 'PUT', :expects => [200, 202]}
+
+        override_params[:path] = path
+        override_params[:body] = data
+        params = default_params.merge(override_params)
+
+        request(params)
+      end
     end
   end
 end

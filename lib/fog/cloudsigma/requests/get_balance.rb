@@ -3,7 +3,7 @@ module Fog
     class CloudSigma
       class Real
         def get_balance
-          request(:path => "balance/", :method => 'GET', :expects => 200)
+          get_request("balance/")
         end
       end
 

@@ -3,7 +3,7 @@ module Fog
     class CloudSigma
       class Real
         def list_ips
-          request(:path => 'ips/detail/', :method => 'GET', :expects => [200])
+          list_request('ips/detail/')
         end
       end
 

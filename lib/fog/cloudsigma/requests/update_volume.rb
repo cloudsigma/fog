@@ -3,7 +3,7 @@ module Fog
     class CloudSigma
       class Real
         def update_volume(vol_id, data)
-          request(:path => "drives/#{vol_id}/", :method => 'PUT', :expects => [200, 202], :body=>data)
+          update_request("drives/#{vol_id}/", data)
         end
       end
 

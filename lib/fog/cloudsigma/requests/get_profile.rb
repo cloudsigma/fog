@@ -3,7 +3,7 @@ module Fog
     class CloudSigma
       class Real
         def get_profile
-          request(:path => "profile/", :method => 'GET', :expects => 200)
+          get_request("profile/")
         end
       end
 

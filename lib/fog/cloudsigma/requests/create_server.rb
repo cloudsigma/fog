@@ -3,7 +3,7 @@ module Fog
     class CloudSigma
       class Real
         def create_server(data)
-          request(:path => "servers/", :method => 'POST', :expects => [200, 202], :body => data)
+          create_request("servers/", data)
         end
       end
 

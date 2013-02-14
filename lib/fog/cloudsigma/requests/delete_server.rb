@@ -3,7 +3,7 @@ module Fog
     class CloudSigma
       class Real
         def delete_server(server_id)
-          request(:path => "servers/#{server_id}/", :method => 'DELETE', :expects => [200, 202, 204])
+          delete_request("servers/#{server_id}/")
         end
       end
 

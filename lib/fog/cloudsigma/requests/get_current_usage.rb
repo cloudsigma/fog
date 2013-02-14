@@ -3,7 +3,7 @@ module Fog
     class CloudSigma
       class Real
         def get_current_usage
-          request(:path => "currentusage/", :method => 'GET', :expects => [200])
+          get_request("currentusage/")
         end
       end
 
