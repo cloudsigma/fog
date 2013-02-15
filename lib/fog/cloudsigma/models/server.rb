@@ -175,9 +175,9 @@ module Fog
         def add_public_nic(ip_or_conf=:dhcp, model='virtio', boot_order=nil)
           case ip_or_conf
             when :dhcp
-              add_nic(nil, {:conf => :dhcp}, model, boot_order)
+              add_nic(nil, {:conf => :dhcp}, nil, model, boot_order)
             when :manual
-              add_nic(nil, {:conf => :manual}, model, boot_order)
+              add_nic(nil, {:conf => :manual}, nil, model, boot_order)
             else
               ip = ip_or_conf.kind_of?(String) ? ip_or_conf : ip_or_conf.identity
               add_nic(nil, {:conf => :static, :ip => ip}, nil, model, boot_order)
