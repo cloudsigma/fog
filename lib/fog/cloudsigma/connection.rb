@@ -139,17 +139,18 @@ module Fog
         end
 
         def mock_update(data, obj_or_collection, status, key)
+          data = Fog::JSON.decode(Fog::JSON.encode(data))
+          p data
           if key
             unless self.data[obj_or_collection][key]
               raise Fog::CloudSigma::Errors::NotFound.new("Object with uuid #{key} does not exist", 'notexist')
             end
             new_data = self.data[obj_or_collection][key].merge(data)
-            reencoded_data = Fog::JSON.decode(Fog::JSON.encode(new_data))
-            self.data[obj_or_collection][key] = reencoded_data
+            p new_data
+            self.data[obj_or_collection][key] = new_data
           else
             new_data = self.data[obj_or_collection].merge(data)
-            reencoded_data = Fog::JSON.decode(Fog::JSON.encode(new_data))
-            self.data[obj_or_collection] = reencoded_data
+            self.data[obj_or_collection] = new_data
           end
 
           Excon::Response.new(:body =>  Fog::JSON.decode(Fog::JSON.encode(new_data)), :status => status)
