@@ -198,6 +198,10 @@ module Fog
           "#{hex[0...8]}-#{hex[8...12]}-#{hex[12...16]}-#{hex[16...20]}-#{hex[20..32]}"
         end
 
+        def self.random_mac
+          (0..5).map{Fog::Mock.random_hex(2)}.join(':')
+        end
+
         def data
           self.class.data[:test]
         end
