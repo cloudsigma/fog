@@ -9,7 +9,7 @@ module Fog
       class Nic < Fog::CloudSigma::CloudsigmaModel
 
 
-        attribute :boot_order, :type => :integer
+        attribute :boot_order
         attribute :mac, :type => :string
         attribute :model, :type => :string
         attribute :vlan

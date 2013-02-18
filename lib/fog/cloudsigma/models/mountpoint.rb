@@ -6,9 +6,19 @@ module Fog
       class MountPoint < Fog::Model
         attribute :device, :type => 'string'
         attribute :dev_channel, :type => 'string'
-        attribute :volume, :aliases => 'drive'
+        attribute :drive
         attribute :boot_order, :type => 'integer'
 
+        def drive
+          drive = attributes[:drive]
+
+          drive.kind_of?(Hash) ? drive['uuid'] : drive
+        end
+
+        def drive=(new_drive)
+          attributes[:drive] = new_drive
+        end
+        alias :volume :drive
       end
     end
   end
