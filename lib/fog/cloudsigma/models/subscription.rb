@@ -15,7 +15,7 @@ module Fog
         attribute :price, :type => :float
         attribute :period, :type => :string
         attribute :remaining, :type => :string
-        attribute :amount, :type => :string
+        attribute :amount, :type => :integer
         attribute :end_time, :type => :time
         attribute :discount_percent, :type => :float
         attribute :subscribed_object, :type => :string

@@ -33,7 +33,7 @@ module Fog
                            :autotopup_amount=>0.0,
                            :country=>"",
                            :address=>""},
-              :subcriptions => {},
+              :subscriptions => {},
               :current_usage => {},
               :balance => {:balance => 100, :currency => 'CHF'},
 

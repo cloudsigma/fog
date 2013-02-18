@@ -50,6 +50,7 @@ module Fog
       collection :vlans
       request :list_vlans
       request :get_vlan
+      request :update_vlan
 
       model :subscription
       collection :subscriptions
