@@ -17,11 +17,8 @@ module Fog
 
             old_nics_macs = old_nics.map { |nic| nic['mac'] }.compact
             new_nics_macs = new_nics.map { |nic| nic['mac'] }.compact
-            p old_nics_macs
-            p new_nics_macs
 
             newly_created_macs = Set.new(new_nics_macs) - old_nics_macs
-            p newly_created_macs
             unless newly_created_macs.empty?
               mac_err = <<-EOS
               MAC(s) #{newly_created_macs.to_a} not specified on guest #{server_id}. Nic MACs are automatically assigned at

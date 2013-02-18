@@ -14,6 +14,27 @@ Shindo.tests('Fog::Compute[:cloudsigma] | server model', ['cloudsigma']) do
       succeeds {/^([0-9a-f]{2}[:]){5}([0-9a-f]{2})$/ === @instance.nics.first.mac}
     end
 
+    tests('attach_vlan') do
+      if Fog.mocking?
+        service.subscriptions.create({:period=>"1 month", :amount=>1, :resource=>"vlan"})
+        vlan = service.vlans.first
+        vlan.meta['name'] = 'fog-test'
+        vlan.save
+      end
+
+      vlan = service.vlans.find {|vlan| vlan.meta['name'] == 'fog-test'}
+
+      pending unless vlan
+
+      @instance.add_private_nic(vlan)
+      @instance.save
+
+      @instance.reload
+
+      returns(vlan.uuid) { @instance.nics.last.vlan['uuid'] || @instance.nics.last.vlan}
+      succeeds {/^([0-9a-f]{2}[:]){5}([0-9a-f]{2})$/ === @instance.nics.last.mac}
+    end
+
     tests('attach_volume') do
       volume_create_args = {:name => 'fogservermodeltest', :size => 1000**3, :media => :cdrom}
       v = service.volumes.create(volume_create_args)

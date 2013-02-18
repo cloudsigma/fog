@@ -28,9 +28,8 @@ module Fog
                                             'servers' => [],
                                             'meta' => {},
                                             'tags' => []}
+            defaults['subscribed_object'] = vlan_uuid
           end
-
-          defaults[]
 
           mock_create(:subscriptions, 200, data, id, defaults)
         end
