@@ -31,9 +31,9 @@ module Fog
           @password = options[:cloudsigma_password]
 
           @scheme = options[:cloudsigma_scheme] || 'https'
-          @host = options[:cloudsigma_host] || 'turloapi.lvs.cloudsigma.com'
+          @host = options[:cloudsigma_host] || 'lvs.cloudsigma.com'
           @port = options[:cloudsigma_port] || '443'
-          @api_path_prefix = options[:cloudsigma_api_path_prefix] || ''
+          @api_path_prefix = options[:cloudsigma_api_path_prefix] || 'api'
           @api_version = options[:cloudsigma_api_version] || '2.0'
           @path_prefix = "#{@api_path_prefix}/#{@api_version}/"
 
@@ -42,11 +42,7 @@ module Fog
 
         def request(params)
           params[:headers] = params.fetch(:headers, {}).merge(auth_header(@auth_type))
-          #TODO: Remove Host header when API server is fixed to acceps port in Host header
-          params[:headers].merge!({
-                                      'Host' => 'turloapi.lvs.cloudsigma.com',
-                                      'Content-Type' => 'application/json; charset=utf-8'
-                                  })
+          params[:headers]['Content-Type'] = 'application/json; charset=utf-8'
 
           req_path = params[:path]
           params[:path] = "#{@path_prefix}#{req_path}"

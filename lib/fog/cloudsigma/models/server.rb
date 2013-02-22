@@ -112,7 +112,7 @@ module Fog
                   controller_channel = 0
                   controller += 1
                   if controller >= max_ctlr
-                    raise "Max channel reached, cannot attach more" #TODO: Better exception
+                    raise Fog::CloudSigma::Errors::Error.new("Max channel reached, cannot attach more")
                   end
                 end
                 dev_channel = "#{controller}:#{controller_channel}"
