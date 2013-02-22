@@ -4,6 +4,16 @@ Shindo.tests('Fog::Compute[:cloudsigma] | server model', ['cloudsigma']) do
   server_create_args =  {:name => 'fogtest', :cpu => 2000, :mem => 512*1024**2, :vnc_password => 'myrandompass'}
 
   model_tests(servers, server_create_args, true) do
+    tests('start_stop').succeeds do
+      @instance.start
+
+      @instance.wait_for(timeout=60)  { status == 'running' }
+
+      @instance.stop
+
+      @instance.wait_for(timeout=60)  { status == 'stopped' }
+    end
+
     tests('attach_dhcp_nic').succeeds do
       @instance.add_public_nic()
       @instance.save
@@ -16,6 +26,7 @@ Shindo.tests('Fog::Compute[:cloudsigma] | server model', ['cloudsigma']) do
 
     tests('attach_vlan') do
       if Fog.mocking?
+        # Do not buy subscription with real account
         service.subscriptions.create({:period=>"1 month", :amount=>1, :resource=>"vlan"})
         vlan = service.vlans.first
         vlan.meta['name'] = 'fog-test'
@@ -24,6 +35,7 @@ Shindo.tests('Fog::Compute[:cloudsigma] | server model', ['cloudsigma']) do
 
       vlan = service.vlans.find {|vlan| vlan.meta['name'] == 'fog-test'}
 
+      # Skip if there is no vlan marked for fog tests
       pending unless vlan
 
       @instance.add_private_nic(vlan)
