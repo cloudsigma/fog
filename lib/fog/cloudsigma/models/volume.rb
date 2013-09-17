@@ -63,7 +63,7 @@ module Fog
           requires :identity
           response = service.clone_volume(identity, clone_params)
 
-          self.class.new(response.body['objects'].first)
+          collection.new(response.body['objects'].first)
         end
       end
     end

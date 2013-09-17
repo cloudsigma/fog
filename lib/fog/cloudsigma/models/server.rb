@@ -90,7 +90,7 @@ module Fog
           requires :identity
           response = service.clone_server(identity, clone_params)
 
-          self.class.new(response.body)
+          collection.new(response.body)
         end
 
         def mount_volume(volume, device = 'virtio', dev_channel = nil, boot_order = nil)

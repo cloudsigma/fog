@@ -44,7 +44,7 @@ module Fog
           end
           response = service.extend_subscription(identity, data)
 
-          self.class.new(response.body)
+          collection.new(response.body)
         end
 
       end
